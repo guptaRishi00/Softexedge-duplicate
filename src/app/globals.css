@@ -1,0 +1,352 @@
+@import "tailwindcss";
+
+/* Satoshi is loaded by next/font/local in app/layout.tsx, which sets
+   --font-satoshi on <html>. */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+}
+body {
+  font-family: var(--font-sans);
+}
+
+/* iOS holds a tap's click back while it waits to see whether a second tap is
+   coming (double-tap-to-zoom). The device-width viewport is not enough on its
+   own: the tap trace on an iPhone showed a full touchstart/touchend with NO
+   mouse events, and tap 1's mousedown/mouseup/click arriving only after tap 2 —
+   the first tap's click, deferred. `manipulation` declares that these elements
+   have no double-tap gesture to arbitrate, so the click is dispatched at once.
+   It still permits panning and pinch-zoom, so carousels and page scroll are
+   unaffected. */
+a,
+button,
+summary,
+label,
+select,
+[role="button"],
+[onclick] {
+  touch-action: manipulation;
+}
+
+/* iOS decides per-tap whether to synthesise the mouse sequence at all. When it
+   judges the target "not clickable" it runs only the hover pass and drops the
+   click, so the control needs a second tap — which is exactly what the on-device
+   trace shows: pointerdown/pointerup on 100% of taps, click on roughly 1 in 3,
+   each lost tap ending `touchend -> mouseover -> nothing`.
+
+   Safari's heuristic counts an element as clickable if it (or an ancestor)
+   carries `cursor: pointer`. Setting it on <body> makes the whole document
+   qualify, so the click is dispatched on the first tap. Scoped to touch devices,
+   where no cursor is ever drawn — desktop never matches this query, so pointer
+   styling there is untouched. */
+@media (hover: none) and (pointer: coarse) {
+  body {
+    cursor: pointer;
+  }
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Notch colour, canvas half (the theme-color half is in app/layout.tsx).
+   <html> is otherwise transparent, so the canvas behind the notch and in the
+   overscroll gutters propagates from <body>, which is white. Black <html>
+   paints that canvas black while <body> still paints its own box white, so no
+   content changes colour. Phones only: desktop sees the canvas only in
+   rubber-band overscroll and stays as it was. */
+@media (max-width: 767px) {
+  html {
+    background-color: #000;
+  }
+}
+body {
+  font-family: var(--font-sans);
+}
+
+/* Intro (components/duplicate/DuplicateIntro.tsx). Strictly
+   sequential so nothing ghosts over the page: 0-0.7s the mark fades/scales
+   in, holds to 1.2s, then accelerates (ease-in) to 12x, filling the screen,
+   and fades out while still growing to 28x by 2.6s. Only then does the white
+   layer dissolve (2.5-3.1s) and the page fade in (2.6-3.6s). Transform
+   and opacity only; `visibility: hidden` at the end so the layer never blocks
+   clicks or screen readers. */
+@keyframes dup-intro-mark {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  27% {
+    opacity: 1;
+    transform: scale(1);
+    animation-timing-function: linear;
+  }
+  46% {
+    opacity: 1;
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+  }
+  86% {
+    opacity: 1;
+    transform: scale(12);
+    animation-timing-function: linear;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(28);
+  }
+}
+
+@keyframes dup-intro-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes dup-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
+.dup-intro {
+  animation: dup-intro-out 0.6s ease-out 2.5s both;
+}
+
+.dup-intro-mark {
+  animation: dup-intro-mark 2.6s both;
+}
+
+.dup-reveal {
+  animation: dup-reveal 1s ease-out 2.6s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dup-intro {
+    display: none;
+  }
+
+  .dup-reveal {
+    animation: none;
+  }
+}
+
+/* Showreel (components/duplicate/DuplicateVideoSection.tsx).
+   The hero fills the first screen on its own (nothing else in view at load);
+   from the first scroll the card rises in small and grows continuously until
+   it fills the screen (minus the stage padding), then holds briefly (40svh).
+   - the animation runs on the section's view timeline from `entry 0%`
+     (section top at the fold = scroll 0, since the hero is one screen) to
+     `entry 100%` (section top at viewport top, exactly when the sticky stage
+     pins); the card scales from its top edge;
+   - the section is 140svh, so the full-size card holds for 40svh pinned.
+   No support or reduced motion = one-screen section, full-size card (still padded and rounded). */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes dup-video-grow {
+      from {
+        scale: var(--dup-reel-start);
+      }
+    }
+
+    .dup-reel {
+      --dup-reel-start: 0.55;
+      height: 140svh;
+      view-timeline: --dup-reel block;
+    }
+
+    .dup-reel-stage {
+      position: sticky;
+      top: 0;
+    }
+
+    .dup-video-card {
+      transform-origin: 50% 0%;
+      animation: dup-video-grow linear both;
+      animation-timeline: --dup-reel;
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  .dup-reel {
+    --dup-reel-start: 0.34;
+  }
+}
+
+/* Stacking portfolio (components/duplicate/DuplicatePortfolio.tsx).
+   Base (every browser): one grid of cards, each `position: sticky` so the
+   next slides up over it; card i sits i * --card-offset lower so the earlier
+   cards' top edges peek out, and the list's bottom padding leaves room for
+   the last card to settle. Enhancement: while card i+1 travels over card i,
+   card i shrinks (deeper cards shrink more), driven by the LIST's view
+   timeline over its exit-crossing range, sliced 1/n per card. Pattern from
+   the scroll-driven "stacking cards" demo. --n / --i are set inline. */
+.dup-stack {
+  --pad: 0.75rem;
+  --card-offset: 1.25rem;
+  --card-h: calc(100svh - 2 * var(--pad) - (var(--n) - 1) * var(--card-offset));
+  display: grid;
+  grid-template-rows: repeat(var(--n), var(--card-h));
+  gap: 2rem;
+  padding-bottom: calc(var(--n) * var(--card-offset));
+  view-timeline: --dup-stack block;
+}
+
+@media (min-width: 48rem) {
+  .dup-stack {
+    --pad: 1.5rem;
+  }
+}
+
+.dup-stack-card {
+  position: sticky;
+  top: var(--pad);
+  padding-top: calc(var(--i) * var(--card-offset));
+}
+
+.dup-stack-card-inner {
+  height: var(--card-h);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes dup-stack-shrink {
+      to {
+        scale: calc(1 - (var(--n) - 1 - var(--i)) * 0.04);
+      }
+    }
+
+    .dup-stack-card-inner {
+      transform-origin: 50% 0%;
+      animation: dup-stack-shrink linear forwards;
+      animation-timeline: --dup-stack;
+      animation-range: exit-crossing calc(var(--i) / var(--n) * 100%)
+        exit-crossing calc((var(--i) + 1) / var(--n) * 100%);
+    }
+  }
+}
+
