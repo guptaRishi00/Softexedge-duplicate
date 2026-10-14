@@ -53,14 +53,13 @@ const GRADIENT_TEXT =
 /**
  * Our Services as stacking cards: every card is `position: sticky` in one
  * list, so each new card slides up over the last, with the earlier cards'
- * top edges peeking out; cards underneath shrink a little as the next lands
- * (scroll-driven, `.dup-stack*` in globals.css). Without support they still
- * stack, they just don't shrink.
+ * top edges peeking out (`.dup-stack*` in globals.css). `.dup-stack--flat`
+ * turns off the shrink the portfolio stack uses: these cards stay full size.
  *
  * Card design is type-only, after a reference the user supplied: big
  * coloured number, huge heavy title ending in a full stop, one bold line.
- * Brand tone: off-black ink card (#0A0A0A, not pure black), brand-gradient
- * number, white Satoshi black title, line muted to white/75 so the title leads.
+ * Brand tone: white cards on an off-black (#0A0A0A) section, brand-gradient
+ * number, near-black Satoshi black title, line in zinc-600 so the title leads.
  */
 export default function DuplicateServices() {
   const count = services.length;
@@ -69,37 +68,40 @@ export default function DuplicateServices() {
     <section
       id="services"
       aria-labelledby="dup-services-title"
-      className="w-full bg-white px-3 pt-24 pb-24 md:px-6 md:pt-32"
+      className="w-full bg-[#0A0A0A] px-3 pt-24 pb-24 md:px-6 md:pt-32"
     >
       <div className="mx-auto mb-12 max-w-[1400px] px-2 md:mb-16 md:px-4">
-        <p className="mb-5 text-sm font-medium uppercase tracking-[0.3em] text-zinc-600 max-md:text-xs">
+        <p className="mb-5 text-sm font-medium uppercase tracking-[0.3em] text-zinc-400 max-md:text-xs">
           Services
         </p>
         <h2
           id="dup-services-title"
-          className="text-[2.5rem] font-bold leading-[1.05] tracking-tight text-black sm:text-6xl md:text-7xl lg:text-[6rem]"
+          className="text-[2.5rem] font-bold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[6rem]"
         >
           Our <span className={`${GRADIENT_TEXT} pr-2`}>Services</span>
         </h2>
-        <p className="mt-6 max-w-xl text-lg leading-[1.35] text-zinc-600 max-md:text-base">
+        <p className="mt-6 max-w-xl text-lg leading-[1.35] text-zinc-400 max-md:text-base">
           We merge strategic thinking with bold creative execution to deliver
           scalable digital experiences that elevate your brand.
         </p>
       </div>
 
-      <ol className="dup-stack" style={{ "--n": count } as CSSProperties}>
+      <ol
+        className="dup-stack dup-stack--flat"
+        style={{ "--n": count } as CSSProperties}
+      >
         {services.map((service, i) => (
           <li
             key={service.href}
             className="dup-stack-card"
             style={{ "--i": i } as CSSProperties}
           >
-            {/* The hairline ring and the upward shadow keep each black card
-                distinct from the black card it slides over. */}
-            <article className="dup-stack-card-inner group relative isolate flex flex-col justify-between overflow-hidden rounded-[20px] bg-[#0A0A0A] px-6 py-10 text-white shadow-[0_-12px_40px_-12px_rgba(0,0,0,0.5)] ring-1 ring-white/[0.08] md:px-12 md:py-16 lg:px-16 lg:py-24">
+            {/* The hairline ring and the upward shadow keep each white card
+                distinct from the white card it slides over. */}
+            <article className="dup-stack-card-inner group relative isolate flex flex-col justify-between overflow-hidden rounded-[20px] bg-white px-6 py-10 text-[#0A0A0A] shadow-[0_-12px_40px_-12px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] md:px-12 md:py-16 lg:px-16 lg:py-24">
               <Link
                 href={service.href}
-                className="absolute inset-0 z-20 rounded-[inherit] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white"
+                className="absolute inset-0 z-20 rounded-[inherit] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-[#2E5BFF]"
               >
                 <span className="sr-only">Explore {service.title}</span>
               </Link>
@@ -122,7 +124,7 @@ export default function DuplicateServices() {
                 <h3 className="-ml-[0.04em] text-[2.25rem] font-black leading-[0.92] tracking-[-0.045em] text-balance sm:text-5xl md:text-7xl lg:text-[6.5rem]">
                   {service.title}.
                 </h3>
-                <p className="max-w-[38ch] text-base font-bold leading-[1.25] tracking-[-0.01em] text-white/75 md:text-xl lg:text-[1.375rem]">
+                <p className="max-w-[38ch] text-base font-bold leading-[1.25] tracking-[-0.01em] text-zinc-600 md:text-xl lg:text-[1.375rem]">
                   {service.line}
                 </p>
               </div>

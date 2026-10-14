@@ -183,3 +183,30 @@ Not committed.
 **Verification.** tsc 0; biome lint clean. User's dev server :3000, paused+seeked 1440x900: h1 color rgb(255,255,255) @1.9 s (navy backdrop) -> rgb(133,133,133) @2.35 (backdrop .5) -> rgb(10,10,10) @2.8 (backdrop gone). Screenshots reviewed. CDP profiles 0.
 
 Not committed.
+
+## Title after the logo; portfolio back; services black with white, non-shrinking cards (2026-10-14)
+
+**Task:** "the title appears after the logo disappears, then add a portfolio section after the video section, then make the service section bg black and cards white and then the cards shouldn't shrink when the next card stacks over them".
+
+**Change.**
+- Title: replaced the white->black ink animation with `dup-title-in` (opacity 0 -> 1, 0.6 s ease-out at 2.7 s, when the logo backdrop's fade ends). Reduced motion: no animation.
+- Portfolio: restored `DuplicatePortfolio.tsx`, `src/data/portfolio.ts`, `ui/DesktopAutoplayVideo.tsx` byte-for-byte from 769b857 (`git checkout 769b857 -- …`), rendered in `page.tsx` between the showreel and services. It keeps its shrinking stack.
+- Services: section `bg-[#0A0A0A]`, eyebrow + lede `text-zinc-400`, h2 white; cards `bg-white text-[#0A0A0A]`, `ring-black/[0.06]`, upward shadow rgba(0,0,0,.35) so each white card's edge shows over the one beneath, line `text-zinc-600`, focus outline brand blue. List gets `dup-stack--flat`; new rule `.dup-stack--flat .dup-stack-card-inner { animation: none }` inside the stack's @supports block, so only this list stops shrinking.
+
+**Verification.** tsc 0; biome clean on changed/restored files (DynamicButton's 1 error is baseline). User's dev server :3000, 1440x900: h1 opacity 0 @1.9/2.4 (logo .38), .26 @2.8, 1 @3.4. Order: header, hero, showreel, #portfolio, #services. Portfolio stack pins 24/44 with scales .84/.947 (shrink intact). Services section rgb(10,10,10), h2 white, cards rgb(255,255,255), pins 24…164, every scale `none`. Overflow 0. Screenshots reviewed. CDP profiles 0.
+
+Not committed.
+
+## Portfolio = the website's home PortfolioSection, overlapping the showreel (2026-10-14)
+
+**Task:** "Portfolio stays like it is in the softexedge website, it should also overlap on the video section". User approved adding GSAP (asked first).
+
+**Change.**
+- Deps: `gsap@3.15.0`, `@gsap/react@2.1.2` (the versions softexedge-sept-2026 runs).
+- NEW `components/duplicate/PortfolioSection.tsx` = sept-2026 `home/PortfolioSection.tsx` byte-for-byte (`cmp` identical): desktop GSAP pin + horizontal scrub with snap, 6 s auto-advance, end hold of 1 viewport; phones native scroll-snap carousel with autoplay. NEW `lib/useIsDesktop.ts` copied verbatim (its only new import). Deleted the stacking `DuplicatePortfolio.tsx` and `ui/DesktopAutoplayVideo.tsx` (only it used that). `data/portfolio.ts` comment updated.
+- `page.tsx`: portfolio inside the home page's wrapper (`relative z-10 bg-[#0a0a0a]` + its lg shadow) with `.dup-reel-cover`; services wrapped `relative z-20 md:-mt-[100vh]` so, as on home, the next block slides over the portfolio's end hold.
+- Overlap on the showreel (desktop, CSS instead of home's GSAP pin): `.dup-reel` 140 -> 240svh so the sticky stage stays pinned while the portfolio wrapper (`margin-top: -100svh`) slides over it; stage animates to `scale .85` + `translate 0 40px` (home's About values) over `contain 40svh .. contain 100%` of the reel timeline, ending exactly when the portfolio top reaches the viewport top and its GSAP pin starts. Inside the same `@supports` + reduced-motion gates as the growth, md+ only (home has no overlap below md either).
+
+**Verification.** tsc 0; biome: PortfolioSection's 2 errors are the original's own (same 2 in sept-2026), rest clean. User's dev server :3000 (http 200 after the install; no 4xx). 1440x900: reel 2160 px, cover margin -900; held card scale 1 @ reel+20; .925/20px with portfolio top 450 mid-cover; .85/40px with portfolio top 0 at cover end; portfolio pinned, track translateX -2591 -> -5595 -> -7200 (auto-advance moved the scroll on its own, as on the site); services top 888 entering over the pinned portfolio, then services and portfolio move together (-181). 390x844: no pull-up (margins 0), reel 140svh, no pin, overflow 0. Screenshots reviewed. CDP profiles 0. Not built (user's dev server running; build would clear its .next).
+
+Not committed.

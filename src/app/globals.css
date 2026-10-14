@@ -238,18 +238,16 @@ body {
   animation: dup-fade-out 0.7s ease-in-out 2s both;
 }
 
-/* The title's ink lines are white over the navy backdrop and turn back to
-   their own near-black exactly as the backdrop fades (same delay and
-   duration). The gradient word is background-clipped, so color doesn't
-   touch it. */
-@keyframes dup-title-ink {
+/* The title stays hidden through the intro and fades in only once the
+   logo backdrop has gone (its fade ends at 2.7s). */
+@keyframes dup-title-in {
   from {
-    color: #fff;
+    opacity: 0;
   }
 }
 
 .dup-hero-title {
-  animation: dup-title-ink 0.7s ease-in-out 2s both;
+  animation: dup-title-in 0.6s ease-out 2.7s both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -311,6 +309,41 @@ body {
   }
 }
 
+/* Portfolio overlap, desktop only (the website's home About -> Portfolio
+   overlap, done here with CSS): the reel gets 100svh more height so its
+   stage stays pinned while the portfolio wrapper (`.dup-reel-cover`, z-10,
+   pulled up 100svh) slides over it, and the stage shrinks to .85 and drops
+   40px meanwhile (the home page's GSAP values). The cover runs from 40svh
+   into the reel's contain range (after the grown card has held) to the end
+   of it, which is exactly when the portfolio's top reaches the viewport top
+   and its own GSAP pin takes over. Gated like the growth: without
+   scroll-driven support the stage isn't sticky, so there is no pull-up. */
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes dup-reel-covered {
+      to {
+        scale: 0.85;
+        translate: 0 40px;
+      }
+    }
+
+    .dup-reel {
+      height: 240svh;
+    }
+
+    .dup-reel-stage {
+      transform-origin: 50% 0%;
+      animation: dup-reel-covered linear both;
+      animation-timeline: --dup-reel;
+      animation-range: contain 40svh contain 100%;
+    }
+
+    .dup-reel-cover {
+      margin-top: -100svh;
+    }
+  }
+}
+
 /* Stacking cards (components/duplicate/DuplicateServices.tsx).
    Base (every browser): one grid of cards, each `position: sticky` so the
    next slides up over it; card i sits i * --card-offset lower so the earlier
@@ -360,6 +393,11 @@ body {
       animation-timeline: --dup-stack;
       animation-range: exit-crossing calc(var(--i) / var(--n) * 100%)
         exit-crossing calc((var(--i) + 1) / var(--n) * 100%);
+    }
+
+    /* Services: cards stay full size as the next one stacks over them. */
+    .dup-stack--flat .dup-stack-card-inner {
+      animation: none;
     }
   }
 }

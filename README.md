@@ -1,7 +1,8 @@
 # softexedge-duplicate
 
 The SoftexEdge "duplicate" page (logo intro, rotating-word hero, scroll-grown
-showreel, "Our Services" stacking cards), moved out of `softexedge-sept-2026`'s
+showreel, the website's horizontal-scroll portfolio and "Our Services"
+stacking cards), moved out of `softexedge-sept-2026`'s
 `/duplicate` route on 2026-10-14. Here it is the home page, `src/app/page.tsx`.
 
 Stack matches the original: Next.js 16.2.5 (App Router, React Compiler),
