@@ -1,7 +1,7 @@
 # softexedge-duplicate
 
 The SoftexEdge "duplicate" page (logo intro, rotating-word hero, scroll-grown
-showreel, stacking portfolio cards), moved out of `softexedge-sept-2026`'s
+showreel, "Our Services" stacking cards), moved out of `softexedge-sept-2026`'s
 `/duplicate` route on 2026-10-14. Here it is the home page, `src/app/page.tsx`.
 
 Stack matches the original: Next.js 16.2.5 (App Router, React Compiler),
@@ -16,5 +16,9 @@ bun run dev -- -p 3500
 - Build: `bun run build` · Typecheck: `bunx tsc --noEmit` · Lint: `bun run lint`
 - Next 16 differs from older versions: read `node_modules/next/dist/docs/`
   before writing Next code (see `AGENTS.md`).
-- The header's nav links and the portfolio cards' `/work/*` links point at
+- Hero intro: `src/components/duplicate/DuplicateIntro.tsx` + `.dup-intro*` in
+  `globals.css` (pure CSS), showing `public/assets/logo-mark.webp`.
+- Don't run `bun run build` while `bun run dev` is running: the build clears
+  `.next` and corrupts the dev server's Turbopack cache.
+- The header's nav links and the service cards' links point at
   routes that exist only in `softexedge-sept-2026`, so they 404 here.

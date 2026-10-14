@@ -29,7 +29,7 @@ export default function DuplicateHero() {
 
   return (
     <section className="relative flex min-h-[100svh] w-full items-center justify-center bg-white px-4 pt-40 pb-16 md:px-8">
-      <h1 className="text-center font-black uppercase leading-[0.92] tracking-[-0.035em] text-black text-[2.5rem] sm:text-6xl md:text-7xl lg:text-[6rem]">
+      <h1 className="text-center font-black uppercase leading-[0.9] tracking-[-0.04em] text-[#0A0A0A] text-[2.75rem] sm:text-[4rem] md:text-[5.25rem] lg:text-[7rem]">
         {/* One stable sentence for assistive tech; the visual lines below
             change every few seconds and would otherwise be re-announced. */}
         <span className="sr-only">

@@ -185,62 +185,65 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Intro (components/duplicate/DuplicateIntro.tsx). Strictly
-   sequential so nothing ghosts over the page: 0-0.7s the mark fades/scales
-   in, holds to 1.2s, then accelerates (ease-in) to 12x, filling the screen,
-   and fades out while still growing to 28x by 2.6s. Only then does the white
-   layer dissolve (2.5-3.1s) and the page fade in (2.6-3.6s). Transform
-   and opacity only; `visibility: hidden` at the end so the layer never blocks
-   clicks or screen readers. */
-@keyframes dup-intro-mark {
-  0% {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  27% {
-    opacity: 1;
-    transform: scale(1);
-    animation-timing-function: linear;
-  }
-  46% {
-    opacity: 1;
-    transform: scale(1);
-    animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
-  }
-  86% {
-    opacity: 1;
-    transform: scale(12);
-    animation-timing-function: linear;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(28);
+/* Intro (components/duplicate/DuplicateIntro.tsx), after the Metalab hero.
+   The SoftexEdge mark sits small and centred on navy and fades 0.5-0.85s;
+   then a box opens and that box IS the page: `.dup-reveal` (header + hero)
+   is clipped to it, so the header and centre content appear inside the
+   opening box, already in place. The box start and motion are measured from
+   the Metalab recording (2026-10-14, 1906x866 @30fps): it appears as a tall
+   narrow centred card, 14% x 81% of the screen with ~14px corners, and grows
+   to full screen in 0.95s on cubic-bezier(.35,.25,.25,1) (least-squares fit;
+   width and height share the curve). The page is `visibility: hidden` until
+   the box appears so it never shows over the logo. The navy layer sits
+   under the page (z-0 vs z-1) and is hidden once the box is full. #03024b
+   is the navy of logo-mark.webp's badge, so the badge's edges vanish.
+   The clip is in the page wrapper's own coordinates, so the vertical box is
+   placed with vh against a page that starts at scroll 0; the clip uses
+   `backwards` fill only, so none is left on the page after the intro. Not a
+   transform: that would become the containing block for the fixed navbar. */
+@keyframes dup-intro-out {
+  to {
+    visibility: hidden;
   }
 }
 
-@keyframes dup-intro-out {
+@keyframes dup-fade-out {
   to {
     opacity: 0;
+  }
+}
+
+@keyframes dup-hold-hidden {
+  from,
+  to {
     visibility: hidden;
   }
 }
 
 @keyframes dup-reveal {
   from {
-    opacity: 0;
+    clip-path: inset(9.5vh 43% calc(100% - 90.5vh) round 14px);
+  }
+  to {
+    clip-path: inset(0 0 calc(100% - 100vh) round 0);
   }
 }
 
 .dup-intro {
-  animation: dup-intro-out 0.6s ease-out 2.5s both;
+  background-color: #03024b;
+  animation: dup-intro-out 0.01s linear 1.8s both;
 }
 
-.dup-intro-mark {
-  animation: dup-intro-mark 2.6s both;
+.dup-intro-logo {
+  animation: dup-fade-out 0.35s ease-out 0.5s both;
 }
 
 .dup-reveal {
-  animation: dup-reveal 1s ease-out 2.6s both;
+  position: relative;
+  z-index: 1;
+  animation:
+    dup-hold-hidden 0.85s linear,
+    dup-reveal 0.95s cubic-bezier(0.35, 0.25, 0.25, 1) 0.85s backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -297,7 +300,7 @@ body {
   }
 }
 
-/* Stacking portfolio (components/duplicate/DuplicatePortfolio.tsx).
+/* Stacking cards (components/duplicate/DuplicateServices.tsx).
    Base (every browser): one grid of cards, each `position: sticky` so the
    next slides up over it; card i sits i * --card-offset lower so the earlier
    cards' top edges peek out, and the list's bottom padding leaves room for

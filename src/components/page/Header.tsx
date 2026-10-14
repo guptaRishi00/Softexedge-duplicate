@@ -171,7 +171,6 @@ export default function Header({
     pathname.startsWith("/career") ||
     pathname.startsWith("/contact") ||
     pathname.startsWith("/blog") ||
-    pathname === "/" ||
     isSubServiceRoute
       ? " border border-gray-300 hover:border-none"
       : "";

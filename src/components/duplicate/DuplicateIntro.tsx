@@ -1,17 +1,21 @@
 import Image from "next/image";
 
 /**
- * /duplicate page intro: the SoftexEdge mark appears on white, expands past
- * the viewport while fading, then this layer dissolves and the page (wrapped
- * in `.dup-reveal`) fades in. Pure CSS (keyframes in globals.css), so it
- * plays from the first paint, before hydration, and a failed or slow JS load
- * can never leave the page hidden. Reduced motion: no intro at all.
+ * Hero intro, after the Metalab hero: the SoftexEdge mark small and centred
+ * on navy, then a box opens out of it to the full screen, revealing the
+ * header and hero inside it (the page wrapper `.dup-reveal` is clipped to
+ * the box). Pure CSS (keyframes in globals.css), so it plays from the first
+ * paint, before hydration, and a failed or slow JS load can never leave the
+ * page hidden. Reduced motion: no intro at all.
+ *
+ * The navy is the mark's own badge colour, so the badge's rounded corners
+ * disappear into it and only the S reads.
  */
 export default function DuplicateIntro() {
   return (
     <div
       aria-hidden="true"
-      className="dup-intro pointer-events-none fixed inset-0 z-[200] grid place-items-center bg-white"
+      className="dup-intro pointer-events-none fixed inset-0 z-0 grid place-items-center"
     >
       <Image
         src="/assets/logo-mark.webp"
@@ -19,10 +23,10 @@ export default function DuplicateIntro() {
         width={768}
         height={768}
         priority
-        // The mark is scaled far past its box during the expand; the 768px
-        // source keeps it crisp longer than an optimizer-picked candidate.
+        // The source (17 KB) keeps the badge navy exact; the optimizer's
+        // re-encode shifts it enough to show a square on the #03024b layer.
         unoptimized
-        className="dup-intro-mark size-24 rounded-[22%] md:size-28"
+        className="dup-intro-logo size-28 md:size-36"
       />
     </div>
   );
