@@ -185,31 +185,39 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Intro (components/duplicate/DuplicateIntro.tsx), after the Metalab hero.
-   The SoftexEdge mark sits small and centred on navy and fades 0.5-0.85s;
-   then a box opens and that box IS the page: `.dup-reveal` (header + hero)
-   is clipped to it, so the header and centre content appear inside the
-   opening box, already in place. The box start and motion are measured from
-   the Metalab recording (2026-10-14, 1906x866 @30fps): it appears as a tall
-   narrow centred card, 14% x 81% of the screen with ~14px corners, and grows
-   to full screen in 0.95s on cubic-bezier(.35,.25,.25,1) (least-squares fit;
-   width and height share the curve). The page is `visibility: hidden` until
-   the box appears so it never shows over the logo. The navy layer sits
-   under the page (z-0 vs z-1) and is hidden once the box is full. #03024b
-   is the navy of logo-mark.webp's badge, so the badge's edges vanish.
+/* Intro. The page starts blank white (0-0.3s); a thin vertical line draws
+   down the full height of the screen at the centre (0.3-0.75s), holds a
+   beat, then opens sideways until it covers the full width and height
+   (0.9-1.85s, cubic-bezier(.35,.25,.25,1), the curve measured from the
+   user's Metalab recording). That opening box IS the page: `.dup-reveal`
+   (header + hero) is clipped to it, so the header and title appear inside
+   it already in place, over a full-bleed navy backdrop with the logo large
+   behind the title (DuplicateHero's `.dup-hero-logo`). Once fully open the
+   backdrop fades away (2.0-2.7s), leaving the white hero.
    The clip is in the page wrapper's own coordinates, so the vertical box is
-   placed with vh against a page that starts at scroll 0; the clip uses
-   `backwards` fill only, so none is left on the page after the intro. Not a
-   transform: that would become the containing block for the fixed navbar. */
-@keyframes dup-intro-out {
-  to {
-    visibility: hidden;
-  }
-}
-
+   placed with vh against a page that starts at scroll 0; `backwards` fill
+   only, so no clip-path is left on the page afterwards. Not a transform:
+   that would become the containing block for the fixed navbar. */
 @keyframes dup-fade-out {
   to {
     opacity: 0;
+  }
+}
+
+@keyframes dup-reveal {
+  0% {
+    clip-path: inset(50vh calc(50% - 1px) calc(100% - 50vh) round 0);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  29% {
+    clip-path: inset(0 calc(50% - 1px) calc(100% - 100vh) round 0);
+  }
+  39% {
+    clip-path: inset(0 calc(50% - 1px) calc(100% - 100vh) round 0);
+    animation-timing-function: cubic-bezier(0.35, 0.25, 0.25, 1);
+  }
+  100% {
+    clip-path: inset(0 0 calc(100% - 100vh) round 0);
   }
 }
 
@@ -220,38 +228,41 @@ body {
   }
 }
 
-@keyframes dup-reveal {
-  from {
-    clip-path: inset(9.5vh 43% calc(100% - 90.5vh) round 14px);
-  }
-  to {
-    clip-path: inset(0 0 calc(100% - 100vh) round 0);
-  }
-}
-
-.dup-intro {
-  background-color: #03024b;
-  animation: dup-intro-out 0.01s linear 1.8s both;
-}
-
-.dup-intro-logo {
-  animation: dup-fade-out 0.35s ease-out 0.5s both;
-}
-
 .dup-reveal {
-  position: relative;
-  z-index: 1;
   animation:
-    dup-hold-hidden 0.85s linear,
-    dup-reveal 0.95s cubic-bezier(0.35, 0.25, 0.25, 1) 0.85s backwards;
+    dup-hold-hidden 0.3s linear,
+    dup-reveal 1.55s linear 0.3s backwards;
+}
+
+.dup-hero-logo {
+  animation: dup-fade-out 0.7s ease-in-out 2s both;
+}
+
+/* The title's ink lines are white over the navy backdrop and turn back to
+   their own near-black exactly as the backdrop fades (same delay and
+   duration). The gradient word is background-clipped, so color doesn't
+   touch it. */
+@keyframes dup-title-ink {
+  from {
+    color: #fff;
+  }
+}
+
+.dup-hero-title {
+  animation: dup-title-ink 0.7s ease-in-out 2s both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dup-intro {
+  .dup-reveal {
+    animation: none;
+  }
+
+  /* Without the fade the navy backdrop would stay behind the headline. */
+  .dup-hero-logo {
     display: none;
   }
 
-  .dup-reveal {
+  .dup-hero-title {
     animation: none;
   }
 }

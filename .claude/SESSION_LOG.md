@@ -157,3 +157,29 @@ Not committed.
 **Verification.** tsc 0; biome check clean. User's dev server :3000: eyebrow "Services" present; 1440: padding 96/96 top/bottom, 64 sides, number 60, h3 104, line 22, arrow 56; 390: padding 40/40, 24 sides, number 36, h3 36, line 16, arrow 40; overflow 0. Screenshots reviewed. CDP profiles 0.
 
 Not committed.
+
+## Pushed to main (2026-10-14)
+
+User asked to push. `git fetch`: main == origin/main (0/0). One commit `15dd039` "feat: Metalab-style intro, Our Services stacking cards, hero polish" (12 files: intro, services stack, hero/showreel/header tweaks, deletions of DuplicatePortfolio / data/portfolio / DesktopAutoplayVideo, README, this log). Verified with a clean production build of that commit in a temporary git worktree (fresh `bun install --frozen-lockfile`, `bun run build` exit 0, `/` static), so the user's running dev server's `.next` was not touched; worktree removed. Pushed 769b857..15dd039 to origin/main.
+
+## Intro: white -> full-height centre line opens to cover the whole screen, logo backdrop then fades (2026-10-14)
+
+**Task (two messages):** "first a white blank background, a vertical line appears in the center and it opens/expands on the whole viewport revealing the content inside (header and main title), behind the title the big logo, after the animation is complete it disappears"; then, angrily: "the line opens up means it covers the full width and height".
+
+**What went wrong first.** The first take (not seen by me, the user watched it on :3000) drew an 81%-tall line and put only the 95svh logo square behind the title, so the dark area the line opened stopped at the logo square's edges instead of filling the screen.
+
+**Change.** Deleted `DuplicateIntro.tsx` (navy layer + small logo) and its use in `page.tsx`. `DuplicateHero.tsx`: full-bleed `#03024b` backdrop (`.dup-hero-logo`, absolute inset-0) with `logo-mark.webp` at 95svh centred inside, h1 `relative` above it, section `overflow-clip`. `globals.css`: page hidden 0-0.3 s (blank white); `.dup-reveal` clip: point -> full-height 2px centre line (0.3-0.75 s, ease-out) -> hold -> opens sideways to the full viewport (0.9-1.85 s, measured Metalab curve cubic-bezier(.35,.25,.25,1)); backdrop fades 2.0-2.7 s. Reduced motion: no clip, backdrop hidden. README updated.
+
+**Verification.** tsc 0; biome lint clean. User's dev server :3000, paused+seeked at 1440x900: 0.8 s clip `inset(0 calc(50% - 1px) calc(100% - 900px))` = full-height line; 1.35 s line opened to 78% width, full height; 1.9 s clip none, navy backdrop (1425 px wide, full screen) with the logo behind the title and header; h1 343; overflow 0. Screenshots reviewed. CDP profiles 0.
+
+Not committed.
+
+## Hero title white during the intro, back to black when it finishes (2026-10-14)
+
+**Task:** "first the black title will be white and when the animation finishes it turns black again".
+
+**Change.** `DuplicateHero.tsx`: h1 gets `dup-hero-title`. `globals.css`: `@keyframes dup-title-ink { from { color: #fff } }` on `.dup-hero-title`, 0.7 s ease-in-out at 2 s `both`, i.e. white until the backdrop starts fading and back to its own `#0A0A0A` in lockstep with `.dup-hero-logo`. The gradient word is background-clipped so it is unaffected. Reduced motion: no animation (black, backdrop hidden).
+
+**Verification.** tsc 0; biome lint clean. User's dev server :3000, paused+seeked 1440x900: h1 color rgb(255,255,255) @1.9 s (navy backdrop) -> rgb(133,133,133) @2.35 (backdrop .5) -> rgb(10,10,10) @2.8 (backdrop gone). Screenshots reviewed. CDP profiles 0.
+
+Not committed.

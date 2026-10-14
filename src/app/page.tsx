@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import DuplicateHero from "@/components/duplicate/DuplicateHero";
-import DuplicateIntro from "@/components/duplicate/DuplicateIntro";
 import DuplicateServices from "@/components/duplicate/DuplicateServices";
 import DuplicateVideoSection from "@/components/duplicate/DuplicateVideoSection";
 import Header from "@/components/page/Header";
@@ -17,10 +16,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="w-full bg-white">
-      <DuplicateIntro />
-      {/* The intro's opening box clips this wrapper (globals.css). Never a
-          transform here: it would become the containing block for the
-          header's fixed navbar. */}
+      {/* The intro: on blank white, a centre line opens to the full screen,
+          clipping this wrapper (globals.css). Never a transform here: it
+          would become the containing block for the header's fixed navbar. */}
       <div className="dup-reveal">
         <Header dropdown />
         <DuplicateHero />

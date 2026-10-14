@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const WORDS = ["Businesses", "Brands", "Products", "Platforms"] as const;
@@ -11,7 +12,10 @@ const GRADIENT =
 
 /**
  * /duplicate hero: white canvas, a three-line headline, and the last line's
- * word cycling in the brand gradient. No video, no image.
+ * word cycling in the brand gradient. During the intro the whole hero sits
+ * on a full-bleed navy backdrop with the SoftexEdge mark large in the middle
+ * (`.dup-hero-logo`), so the opening line (`.dup-reveal` in globals.css)
+ * reveals navy edge to edge; once fully open the backdrop fades away.
  */
 export default function DuplicateHero() {
   const reduce = useReducedMotion();
@@ -28,8 +32,28 @@ export default function DuplicateHero() {
   }, [reduce]);
 
   return (
-    <section className="relative flex min-h-[100svh] w-full items-center justify-center bg-white px-4 pt-40 pb-16 md:px-8">
-      <h1 className="text-center font-black uppercase leading-[0.9] tracking-[-0.04em] text-[#0A0A0A] text-[2.75rem] sm:text-[4rem] md:text-[5.25rem] lg:text-[7rem]">
+    // overflow-clip: the logo behind the headline is wider than a phone; it
+    // must never widen the page.
+    <section className="relative flex min-h-[100svh] w-full items-center justify-center overflow-clip bg-white px-4 pt-40 pb-16 md:px-8">
+      {/* #03024b is the badge navy of logo-mark.webp, so the badge's edges
+          vanish into the backdrop and only the S reads. */}
+      <div
+        aria-hidden="true"
+        className="dup-hero-logo pointer-events-none absolute inset-0 grid place-items-center bg-[#03024b]"
+      >
+        <Image
+          src="/assets/logo-mark.webp"
+          alt=""
+          width={768}
+          height={768}
+          priority
+          // The source keeps the badge navy exact and is sharper at this size
+          // than an optimizer candidate.
+          unoptimized
+          className="size-[95svh] max-w-none"
+        />
+      </div>
+      <h1 className="dup-hero-title relative text-center font-black uppercase leading-[0.9] tracking-[-0.04em] text-[#0A0A0A] text-[2.75rem] sm:text-[4rem] md:text-[5.25rem] lg:text-[7rem]">
         {/* One stable sentence for assistive tech; the visual lines below
             change every few seconds and would otherwise be re-announced. */}
         <span className="sr-only">
